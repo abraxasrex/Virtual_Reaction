@@ -29,6 +29,10 @@ const mainUIComponentStyles = StyleSheet.create({
             textAlignVertical: 'center',
             transform: [{translate: [0, 0, -3]}]
   },
+  modelComponent: {
+    transform: [{translate: [0, 0, -10]}],
+    position: 'absolute'
+  },
   mainButton: {
     marginTop: 1,
   },
