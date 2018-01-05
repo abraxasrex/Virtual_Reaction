@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppRegistry,asset,Pano,Text,View,VrButton,Model} from 'react-vr';
+import {AppRegistry,asset,Pano,Text,View,VrButton,Model,AmbientLight} from 'react-vr';
 import {StyleSheet} from 'react-native';
 import mainUIComponentStyles from './styles/mainpage.js';
 import PolyServices from './services/PolyServices.js';
@@ -40,6 +40,7 @@ class LoadedModel extends React.Component{
         }} 
         texture="https://poly.googleapis.com/downloads/6dM1J6f6pm9/fA_mIl2jzUR/Tex_Cat.png"
         style={{   transform: [{translate: [0, 0, -15]}, {scale: 0.25}]}}
+        lit={true}
       />
     }
   }
@@ -86,6 +87,7 @@ export default class VirtualReaction extends React.Component {
         {/*}  </Col>
         </Row>
       </Grid> */ }
+      <AmbientLight intensity={ 2.6 }  />
         <LoadedModel
           objPath={this.currentObj}
         />
