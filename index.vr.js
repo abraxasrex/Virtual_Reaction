@@ -24,13 +24,13 @@ class LoadedModel extends React.Component{
       console.log("OBJ path!: ");
           return  <Model
             source={{
-              obj: props.objPath
+              obj: props.objPath,
               // obj: defaultObj,
-              // mtl: defaultObj
+              mtl: "https://poly.googleapis.com/downloads/6dM1J6f6pm9/fA_mIl2jzUR/Mesh_Cat.mtl"
             }} 
-            style={{transform: [{translate: [0, 0, -10]}, 
-                  //  {scale: 0.5},
-                    {rotateY: 0}]}}
+            texture="https://poly.googleapis.com/downloads/6dM1J6f6pm9/fA_mIl2jzUR/Tex_Cat.png"
+            style={{   transform: [{translate: [0, 0, -15]}, {scale: 0.25}]}}
+            lit={true}
           />
     } else {
       return <Model 
