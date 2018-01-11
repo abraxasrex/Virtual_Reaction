@@ -19,9 +19,13 @@ const PolyServices = {
            {mode: 'no-cors'})
             .then(response => response.json())
             .then(response => {
-                //console.log("Response: ", response);
-                console.log(response.assets[0].formats[0].root.url);
-                return response.assets[0].formats[0].root.url
+                return {obj: response.assets[0].formats[0].root.url, 
+                        mtl: response.assets[0].formats[0].resources[0].url, 
+                        text: response.assets[0].formats[0].resources[1].url,
+                        metadata: {
+                            modelName: response.assets[0].displayName,
+                            authorName: response.assets[0].authorName
+                        }};
             })
             .catch(error => {
                 console.error(error);
