@@ -19,13 +19,16 @@ const PolyServices = {
            {mode: 'no-cors'})
             .then(response => response.json())
             .then(response => {
-                return {obj: response.assets[0].formats[0].root.url, 
-                        mtl: response.assets[0].formats[0].resources[0].url, 
-                        text: response.assets[0].formats[0].resources[1].url,
-                        metadata: {
-                            modelName: response.assets[0].displayName,
-                            authorName: response.assets[0].authorName
-                        }};
+                return response.assets.map((r)=> {
+                    return  { obj: r.formats[0].root.url, 
+                              mtl: r.formats[0].resources[0].url,
+                              // text: response.assets[0].formats[0].resources[1].url,
+                              metadata: {
+                                modelName: r.displayName,
+                                authorName: r.authorName
+                              }
+                            }
+                });
             })
             .catch(error => {
                 console.error(error);
