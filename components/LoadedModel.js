@@ -18,11 +18,13 @@ export default class LoadedModel extends React.Component{
     }
     render (){  
      if(this.props.isLoaded){
+       console.log(this);
         return <Model
         source={{
           obj: this.props.model.obj,
           mtl: this.props.model.mtl
         }}
+        onClick={()=> this.loadingMessage}
         style={{ color: "pink", layoutOrigin: [0, 0], transform: [{translate: [25, 0, -150]}, {rotateY: this.props.rotation}, {scale: 1}]}}
         />
      } else {

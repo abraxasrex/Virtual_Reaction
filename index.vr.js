@@ -1,12 +1,15 @@
 import React from 'react';
-import {AppRegistry,asset,Pano,Text,CylindricalPanel, View, VrButton, Model, AmbientLight} from 'react-vr';
+import {AppRegistry,asset,Pano,Text, NativeModules, Scene, CylindricalPanel, View, VrButton, Model, AmbientLight} from 'react-vr';
 import {StyleSheet} from 'react-native';
 import mainUIComponentStyles from './styles/mainpage.js';
 import PolyServices from './services/PolyServices.js';
 import LoadedModel from './components/LoadedModel';
 import BackButton from './components/BackButton';
 import * as THREE from 'three';
-//import { currentId } from 'async_hooks';
+// import * as'three-obj-loader');
+// OBJLoader(THREE);
+// import NativeModules from 'react-vr';
+const customModelLoader = NativeModules.CustomModelLoader;
 
 const searchId = '6dM1J6f6pm9';
 const defaultObj = 'http://people.sc.fsu.edu/~jburkardt/data/obj/slot_machine.obj';
@@ -14,6 +17,7 @@ const defaultObj = 'http://people.sc.fsu.edu/~jburkardt/data/obj/slot_machine.ob
 function incrementCount(state, props){
   return {count : state.count + 1}
 }
+
 
 export default class VirtualReaction extends React.Component {
   constructor(props, context){
@@ -35,7 +39,8 @@ export default class VirtualReaction extends React.Component {
     };
     PolyServices.getPolyAssetList('cats').then((_gallery)=>{
       this.setState({gallery: _gallery, currentModel: _gallery[0], modelsLoaded: true});
-    })
+      customModelLoader.getModel(_gallery[0]);
+    });
     this.animatorTime = setInterval(()=>{
      this.rotation += 2;
       let rotation = this.state.rotation;
@@ -50,9 +55,10 @@ export default class VirtualReaction extends React.Component {
       i = 0;
     }
     this.setState({galleryIndex: i, currentModel: this.state.gallery[i], isLoaded: this.state.modelsLoaded});
-    this.modelRenderTime = setTimeout(()=>{
-      this.setState({isLoaded: this.state.modelsLoaded});
-    }, 200);
+    // this.modelRenderTime = setTimeout(()=>{
+    //   this.setState({isLoaded: this.state.modelsLoaded});
+    // }, 200);
+    customModelLoader.getModel(this.state.gallery[i]);
   }
   cycleGalleryBackward = () => {
     let i = this.state.galleryIndex -= 1;
@@ -60,14 +66,11 @@ export default class VirtualReaction extends React.Component {
       i = this.state.gallery.length - 1;
     }
     this.setState({galleryIndex: i, currentModel: this.state.gallery[i], isLoaded: this.state.modelsLoaded});
-    this.modelRenderTime = setTimeout(()=>{
-      this.setState({isLoaded: this.state.modelsLoaded});
-    }, 200);
+    customModelLoader.getModel(this.state.gallery[i]);
+    // this.modelRenderTime = setTimeout(()=>{
+    //   this.setState({isLoaded: this.state.modelsLoaded});
+    // }, 200);
   }
-  // onViewClicked = () => {
-  //   this.setState(incrementCount);
-  //   this.cycleGalleryForward();
-  // }
   updateModel = (_metadata) => {
     let model = this.state.currentModel;
     model.metadata.authorName = _metadata.authorName;
@@ -98,14 +101,16 @@ export default class VirtualReaction extends React.Component {
       </Text>
 
       <AmbientLight intensity={ 2.6 }  />
-        <LoadedModel
-          ref="testing"
-          modelPathPromise={PolyServices.getPolyAssetList}
-          rotation={this.state.rotation}
-          onModelLoaded={this.updateModel}
-          model ={this.state.currentModel}
-          isLoaded={this.state.modelsLoaded}
-        />
+   
+       {/*<LoadedModel
+              ref="testing"
+              modelPathPromise={PolyServices.getPolyAssetList}
+              rotation={this.state.rotation}
+              onModelLoaded={this.updateModel}
+              model ={this.state.currentModel}
+              isLoaded={this.state.modelsLoaded}
+       /> */}
+       
       </View>
     );
   }
