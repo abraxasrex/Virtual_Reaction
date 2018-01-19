@@ -1,22 +1,14 @@
 import React from 'react';
-import {AppRegistry,asset,Pano,Text, NativeModules, Scene, CylindricalPanel, View, VrButton, Model, AmbientLight} from 'react-vr';
-import {StyleSheet} from 'react-native';
+import {AppRegistry,asset,Pano,Text, NativeModules, View, AmbientLight} from 'react-vr';
 import mainUIComponentStyles from './styles/mainpage.js';
 import PolyServices from './services/PolyServices.js';
-import LoadedModel from './components/LoadedModel';
 import BackButton from './components/BackButton';
-import * as THREE from 'three';
-// import * as'three-obj-loader');
-// OBJLoader(THREE);
-// import NativeModules from 'react-vr';
+import ForwardButton from './components/ForwardButton';
+import ScaleDownButton from './components/ScaleDownButton';
+import ScaleUpButton from './components/ScaleUpButton';
+
 const customModelLoader = NativeModules.CustomModelLoader;
 
-const searchId = '6dM1J6f6pm9';
-const defaultObj = 'http://people.sc.fsu.edu/~jburkardt/data/obj/slot_machine.obj';
-
-function incrementCount(state, props){
-  return {count : state.count + 1}
-}
 
 export default class VirtualReaction extends React.Component {
   constructor(props, context){
@@ -25,6 +17,7 @@ export default class VirtualReaction extends React.Component {
       count: 0, 
       rotation: 130, 
       modelsLoaded: false, 
+      scale: 0.25,
       currentModel: {
         obj:'',
         mtl:'',
@@ -38,26 +31,17 @@ export default class VirtualReaction extends React.Component {
       gallery:[]
     };
     PolyServices.getPolyAssetList('cats').then((_gallery)=>{
-      this.setState({gallery: _gallery, currentModel: _gallery[0], modelsLoaded: true});
+      this.setState({gallery: _gallery, scale: 0.25, currentModel: _gallery[0], modelsLoaded: true});
       customModelLoader.getModel(_gallery[0]);
     });
-    this.animatorTime = setInterval(()=>{
-     this.rotation += 2;
-      let rotation = this.state.rotation;
-      this.setState({rotation: rotation + 1});
-    }, 200);
 
   }
   cycleGalleryForward = () => {
-   // console.log(this.refs, "da refs");
     let i = this.state.galleryIndex += 1;
     if(i > this.state.gallery.length - 1){
       i = 0;
     }
-    this.setState({galleryIndex: i, currentModel: this.state.gallery[i], isLoaded: this.state.modelsLoaded});
-    // this.modelRenderTime = setTimeout(()=>{
-    //   this.setState({isLoaded: this.state.modelsLoaded});
-    // }, 200);
+    this.setState({galleryIndex: i, scale: 0.25, currentModel: this.state.gallery[i], isLoaded: this.state.modelsLoaded});
     customModelLoader.getModel(this.state.gallery[i]);
   }
   cycleGalleryBackward = () => {
@@ -65,11 +49,20 @@ export default class VirtualReaction extends React.Component {
     if(i < 0){
       i = this.state.gallery.length - 1;
     }
-    this.setState({galleryIndex: i, currentModel: this.state.gallery[i], isLoaded: this.state.modelsLoaded});
+    this.setState({galleryIndex: i, scale: 0.25, currentModel: this.state.gallery[i], isLoaded: this.state.modelsLoaded});
     customModelLoader.getModel(this.state.gallery[i]);
-    // this.modelRenderTime = setTimeout(()=>{
-    //   this.setState({isLoaded: this.state.modelsLoaded});
-    // }, 200);
+  }
+  scaleModelUp = () => {
+    if(this.state.scale < 5){
+      this.setState({scale: this.state.scale + 0.1});
+      customModelLoader.scaleModel(this.state.scale + 0.1);
+    }
+  }
+  scaleModelDown = () => {
+   if(this.state.scale > 0){
+    this.setState({scale: this.state.scale - 0.1});
+    customModelLoader.scaleModel(this.state.scale - 0.1);
+   }
   }
   updateModel = (_metadata) => {
     let model = this.state.currentModel;
@@ -81,19 +74,14 @@ export default class VirtualReaction extends React.Component {
     return (
       <View>
         <Pano source={asset('lutry.jpg')}/>
-
-        <VrButton
-          onClick={()=> this.cycleGalleryForward() }>
-          <Text
-            style={mainUIComponentStyles.rightButton}>
-            Next -->
-          </Text>
-        </VrButton>
-      
-        <BackButton
-          onViewClicked={this.cycleGalleryBackward}>
+        <ScaleUpButton onViewClicked={this.scaleModelUp}>
+        </ScaleUpButton>
+        <ScaleDownButton onViewClicked={this.scaleModelDown}>
+        </ScaleDownButton>
+        <ForwardButton onViewClicked={this.cycleGalleryForward}>
+        </ForwardButton>
+        <BackButton onViewClicked={this.cycleGalleryBackward}>
         </BackButton>
-
       <Text
         style={mainUIComponentStyles.mainComponent}>
         <Text> {this.state.currentModel.metadata.modelName} </Text>
@@ -101,7 +89,6 @@ export default class VirtualReaction extends React.Component {
       </Text>
 
     <AmbientLight intensity={ 1}  />
-   
        {/*<LoadedModel
               ref="testing"
               modelPathPromise={PolyServices.getPolyAssetList}
@@ -110,7 +97,6 @@ export default class VirtualReaction extends React.Component {
               model ={this.state.currentModel}
               isLoaded={this.state.modelsLoaded}
     /> */}
-       
       </View>
     );
   }
