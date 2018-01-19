@@ -18,7 +18,7 @@ export default class LoadedModel extends React.Component{
     }
     render (){  
      if(this.props.isLoaded){
-       console.log(this);
+      // console.log(this);
         return <Model
         source={{
           obj: this.props.model.obj,

@@ -18,7 +18,6 @@ function incrementCount(state, props){
   return {count : state.count + 1}
 }
 
-
 export default class VirtualReaction extends React.Component {
   constructor(props, context){
     super(props, context);
@@ -29,6 +28,7 @@ export default class VirtualReaction extends React.Component {
       currentModel: {
         obj:'',
         mtl:'',
+        text: null,
         metadata:{
           modelName:'Loading...',
           authorName:''
@@ -83,7 +83,7 @@ export default class VirtualReaction extends React.Component {
         <Pano source={asset('lutry.jpg')}/>
 
         <VrButton
-        onClick={()=> this.cycleGalleryForward() }>
+          onClick={()=> this.cycleGalleryForward() }>
           <Text
             style={mainUIComponentStyles.rightButton}>
             Next -->
@@ -100,7 +100,7 @@ export default class VirtualReaction extends React.Component {
         <Text> by {this.state.currentModel.metadata.authorName} </Text>
       </Text>
 
-      <AmbientLight intensity={ 2.6 }  />
+    <AmbientLight intensity={ 1}  />
    
        {/*<LoadedModel
               ref="testing"
@@ -109,7 +109,7 @@ export default class VirtualReaction extends React.Component {
               onModelLoaded={this.updateModel}
               model ={this.state.currentModel}
               isLoaded={this.state.modelsLoaded}
-       /> */}
+    /> */}
        
       </View>
     );

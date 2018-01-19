@@ -20,8 +20,13 @@ const PolyServices = {
             .then(response => response.json())
             .then(response => {
                 return response.assets.map((r)=> {
+                    let text = null;
+                    if(r.formats[0].resources[1]){
+                      text = r.formats[0].resources[1].url;
+                    }
                     return  { obj: r.formats[0].root.url, 
                               mtl: r.formats[0].resources[0].url,
+                              text: text,
                               // text: response.assets[0].formats[0].resources[1].url,
                               metadata: {
                                 modelName: r.displayName,
