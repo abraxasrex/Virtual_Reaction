@@ -1,11 +1,13 @@
 import React from 'react';
 import {AppRegistry,asset,Pano,Text, NativeModules, View, AmbientLight} from 'react-vr';
-import mainUIComponentStyles from './styles/mainpage.js';
-import PolyServices from './services/PolyServices.js';
+import mainUIComponentStyles from './styles/mainpage';
+import PolyServices from './services/PolyServices';
 import BackButton from './components/BackButton';
 import ForwardButton from './components/ForwardButton';
 import ScaleDownButton from './components/ScaleDownButton';
 import ScaleUpButton from './components/ScaleUpButton';
+import TextInput from './components/TextInput/textInput.js';
+
 
 const customModelLoader = NativeModules.CustomModelLoader;
 
@@ -30,11 +32,13 @@ export default class VirtualReaction extends React.Component {
       galleryIndex: 0,
       gallery:[]
     };
-    PolyServices.getPolyAssetList('cats').then((_gallery)=>{
-      this.setState({gallery: _gallery, scale: 0.25, currentModel: _gallery[0], modelsLoaded: true});
+   this.setGallery("cats");
+  }
+  setGallery(string){
+    PolyServices.getPolyAssetList(string).then((_gallery)=>{
+      this.setState({gallery: _gallery, galleryIndex: 0, scale: 0.25, currentModel: _gallery[0], modelsLoaded: true});
       customModelLoader.getModel(_gallery[0]);
     });
-
   }
   cycleGalleryForward = () => {
     let i = this.state.galleryIndex += 1;
@@ -70,33 +74,31 @@ export default class VirtualReaction extends React.Component {
     model.metadata.modelName = _metadata.modelName;
     this.setState({modelsLoaded: true, currentModel: model});
   }
+  submitHandler(string) {
+    console.log('the text received by the submitHandler is ' + string);
+    this.setGallery(string);
+  }
   render() {
     return (
       <View>
-        <Pano source={asset('lutry.jpg')}/>
+        <Pano source={asset('chess-world.jpg')}/>
         <ScaleUpButton onViewClicked={this.scaleModelUp}>
         </ScaleUpButton>
         <ScaleDownButton onViewClicked={this.scaleModelDown}>
         </ScaleDownButton>
+        <Text> Search: </Text>
+        <TextInput onSubmit={this.submitHandler.bind(this)} rows={2} 
+        cols={20} x={-1} y={2.5} z={-2} textColor={'white'} backgroundColor={'grey'} keyboardColor={null} keyboardOnHover={null}/>
         <ForwardButton onViewClicked={this.cycleGalleryForward}>
         </ForwardButton>
         <BackButton onViewClicked={this.cycleGalleryBackward}>
         </BackButton>
-      <Text
-        style={mainUIComponentStyles.mainComponent}>
-        <Text> {this.state.currentModel.metadata.modelName} </Text>
-        <Text> by {this.state.currentModel.metadata.authorName} </Text>
-      </Text>
-
-    <AmbientLight intensity={ 1}  />
-       {/*<LoadedModel
-              ref="testing"
-              modelPathPromise={PolyServices.getPolyAssetList}
-              rotation={this.state.rotation}
-              onModelLoaded={this.updateModel}
-              model ={this.state.currentModel}
-              isLoaded={this.state.modelsLoaded}
-    /> */}
+        <Text
+          style={mainUIComponentStyles.mainComponent}>
+          <Text> {this.state.currentModel.metadata.modelName} </Text>
+          <Text> by {this.state.currentModel.metadata.authorName} </Text>
+        </Text>
+        <AmbientLight intensity={ 1}  />
       </View>
     );
   }

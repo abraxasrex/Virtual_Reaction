@@ -19,6 +19,9 @@ const PolyServices = {
            {mode: 'no-cors'})
             .then(response => response.json())
             .then(response => {
+                if(!response.assets){
+                    return null;
+                }
                 return response.assets.map((r)=> {
                     let text = null;
                     if(r.formats[0].resources[1]){
