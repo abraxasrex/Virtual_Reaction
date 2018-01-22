@@ -24,6 +24,9 @@ const PolyServices = {
                 }
                 return response.assets.map((r)=> {
                     let text = null;
+                    if(!!r.formats[0].resource){
+                        return null;
+                    }
                     if(r.formats[0].resources[1]){
                       text = r.formats[0].resources[1].url;
                     }

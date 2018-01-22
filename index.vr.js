@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppRegistry,asset,Pano,Text, NativeModules, View, AmbientLight} from 'react-vr';
+import {AppRegistry,asset,Pano,Text, VrButton, NativeModules, View, AmbientLight} from 'react-vr';
 import mainUIComponentStyles from './styles/mainpage';
 import PolyServices from './services/PolyServices';
 import BackButton from './components/BackButton';
@@ -8,6 +8,9 @@ import ScaleDownButton from './components/ScaleDownButton';
 import ScaleUpButton from './components/ScaleUpButton';
 import TextInput from './components/TextInput/textInput.js';
 
+import Icon from './node_modules/react-icons-kit';
+
+import { home } from './node_modules/react-icons-kit/icomoon';
 
 const customModelLoader = NativeModules.CustomModelLoader;
 
@@ -60,12 +63,16 @@ export default class VirtualReaction extends React.Component {
     if(this.state.scale < 5){
       this.setState({scale: this.state.scale + 0.1});
       customModelLoader.scaleModel(this.state.scale + 0.1);
+    } else{
+      this.setState({scale: 5});
     }
   }
   scaleModelDown = () => {
    if(this.state.scale > 0){
     this.setState({scale: this.state.scale - 0.1});
     customModelLoader.scaleModel(this.state.scale - 0.1);
+   }else{
+     this.setState({scale: 0});
    }
   }
   updateModel = (_metadata) => {
@@ -82,20 +89,25 @@ export default class VirtualReaction extends React.Component {
     return (
       <View>
         <Pano source={asset('chess-world.jpg')}/>
-        <ScaleUpButton onViewClicked={this.scaleModelUp}>
-        </ScaleUpButton>
-        <ScaleDownButton onViewClicked={this.scaleModelDown}>
-        </ScaleDownButton>
-        <Text> Search: </Text>
-        <TextInput onSubmit={this.submitHandler.bind(this)} rows={2} 
-        cols={20} x={-1} y={2.5} z={-2} textColor={'white'} backgroundColor={'grey'} keyboardColor={null} keyboardOnHover={null}/>
-        <ForwardButton onViewClicked={this.cycleGalleryForward}>
-        </ForwardButton>
-        <BackButton onViewClicked={this.cycleGalleryBackward}>
-        </BackButton>
+        <Text style={mainUIComponentStyles.searchText}> Search: </Text>
+        <View  style={mainUIComponentStyles.searchBar}>
+          <TextInput onSubmit={this.submitHandler.bind(this)} rows={2} 
+          cols={30} x={0} y={0} z={0} textColor={'white'} 
+          backgroundColor={'grey'} keyboardColor={null} keyboardOnHover={null}/>
+        </View>
+        <View>
+          <ScaleUpButton onViewClicked={this.scaleModelUp}>
+          </ScaleUpButton>
+          <ScaleDownButton style={{color:"#F3A31B"}} onViewClicked={this.scaleModelDown}>
+          </ScaleDownButton>
+          <ForwardButton style={{color:"#F2981D"}}  onViewClicked={this.cycleGalleryForward}>
+          </ForwardButton>
+          <BackButton style={{color:"#D53718"}}  onViewClicked={this.cycleGalleryBackward}>
+          </BackButton>
+        </View>
         <Text
           style={mainUIComponentStyles.mainComponent}>
-          <Text> {this.state.currentModel.metadata.modelName} </Text>
+          <Text style={{color:"#1FB2C1"}}> {this.state.currentModel.metadata.modelName}</Text>
           <Text> by {this.state.currentModel.metadata.authorName} </Text>
         </Text>
         <AmbientLight intensity={ 1}  />

@@ -3,7 +3,7 @@ import { View, VrButton, StyleSheet, Text, Animated } from 'react-vr';
 
 var styles = StyleSheet.create({
   text: {
-    fontSize: 0.04,
+    fontSize: 0.075,
     textAlign: 'center',
     color: '#ffffff',
     opacity: 3,

@@ -459,7 +459,7 @@ class TextInput extends Component {
       <View style={{transform: [{rotateY: this.props.rotateY || 0}, {rotateX: this.props.rotateX || 0}]}}>
         <View>
           <VrButton onClick={this.focus.bind(this)}>
-            <Text style={{textAlign: 'center', backgroundColor: this.state.backgroundColor, color: this.state.textColor, width: this.state.columns / 20, opacity: 0.8, height: this.state.rows / 10, margin: 0.1, fontSize: 0.08, transform: [{ translate: [this.state.x, this.state.y, this.state.z] }]}}>
+            <Text style={{textAlign: 'center', backgroundColor: this.state.backgroundColor, color: this.state.textColor, width: this.state.columns / 20, opacity: 0.8, height: this.state.rows / 10, margin: 0.1, fontSize: 0.16, transform: [{ translate: [this.state.x, this.state.y, this.state.z] }]}}>
               {displayString}
             </Text>
           </VrButton>
@@ -472,7 +472,7 @@ class TextInput extends Component {
             />
           </View>
         {this.state.focus ? (
-        <View style={{transform: [{ translate: [this.state.x -0.2, this.state.y, this.state.z] }, {rotateX: -30}] }}>
+        <View style={{width: 4, transform: [{ translate: [this.state.x -0.2, this.state.y, this.state.z] }]}}>
           <Keyboard
             keyboardOnHover={this.props.keyboardOnHover} 
             keyboardColor={this.props.keyboardColor} 
