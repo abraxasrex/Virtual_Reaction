@@ -9,7 +9,7 @@ render(){
     return <VrButton
     onClick={()=>this.props.onViewClicked()}>
     <Text
-    style={mainUIComponentStyles.leftButton}>
+    style={[mainUIComponentStyles.standardButton, mainUIComponentStyles.leftButton]}>
       Last
     </Text>
     </VrButton>

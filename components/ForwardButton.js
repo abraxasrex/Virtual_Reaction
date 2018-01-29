@@ -6,10 +6,10 @@ import {FaArrow} from 'react-icons/fa/arrow-circle-right';
 export default class ForwardButton extends React.Component {
 
     render(){
-        return <VrButton
+        return <VrButton 
         onClick={()=>this.props.onViewClicked()}>
         <Text
-        style={mainUIComponentStyles.rightButton}>
+        style={[mainUIComponentStyles.standardButton, mainUIComponentStyles.rightButton]}>
           Next
         </Text>
         </VrButton>

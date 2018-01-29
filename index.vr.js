@@ -8,9 +8,6 @@ import ScaleDownButton from './components/ScaleDownButton';
 import ScaleUpButton from './components/ScaleUpButton';
 import TextInput from './components/TextInput/textInput.js';
 
-import Icon from './node_modules/react-icons-kit';
-
-import { home } from './node_modules/react-icons-kit/icomoon';
 
 const customModelLoader = NativeModules.CustomModelLoader;
 
@@ -37,44 +34,54 @@ export default class VirtualReaction extends React.Component {
     };
    this.setGallery("cats");
   }
+
   setGallery(string){
     PolyServices.getPolyAssetList(string).then((_gallery)=>{
       this.setState({gallery: _gallery, galleryIndex: 0, scale: 0.25, currentModel: _gallery[0], modelsLoaded: true});
       customModelLoader.getModel(_gallery[0]);
     });
   }
+
   cycleGalleryForward = () => {
-    let i = this.state.galleryIndex += 1;
-    if(i > this.state.gallery.length - 1){
+    let {gallery, galleryIndex, modelsLoaded} = this.state;
+    let i = galleryIndex += 1;
+    if(i > gallery.length - 1){
       i = 0;
     }
-    this.setState({galleryIndex: i, scale: 0.25, currentModel: this.state.gallery[i], isLoaded: this.state.modelsLoaded});
-    customModelLoader.getModel(this.state.gallery[i]);
+    this.setState({galleryIndex: i, scale: 0.25, currentModel: gallery[i], isLoaded: modelsLoaded});
+    customModelLoader.getModel(gallery[i]);
   }
+
   cycleGalleryBackward = () => {
-    let i = this.state.galleryIndex -= 1;
+    let {gallery, galleryIndex, modelsLoaded} = this.state;
+    let i = galleryIndex -= 1;
     if(i < 0){
-      i = this.state.gallery.length - 1;
+      i = gallery.length - 1;
     }
-    this.setState({galleryIndex: i, scale: 0.25, currentModel: this.state.gallery[i], isLoaded: this.state.modelsLoaded});
-    customModelLoader.getModel(this.state.gallery[i]);
+    this.setState({galleryIndex: i, scale: 0.25, currentModel: gallery[i], isLoaded: modelsLoaded});
+    customModelLoader.getModel(gallery[i]);
   }
+
   scaleModelUp = () => {
-    if(this.state.scale < 5){
-      this.setState({scale: this.state.scale + 0.1});
-      customModelLoader.scaleModel(this.state.scale + 0.1);
+    let {scale} = this.state;
+    if(scale < 5){
+      this.setState({scale: scale + 0.1});
+      customModelLoader.scaleModel(scale + 0.1);
     } else{
       this.setState({scale: 5});
     }
   }
+
   scaleModelDown = () => {
-   if(this.state.scale > 0){
-    this.setState({scale: this.state.scale - 0.1});
-    customModelLoader.scaleModel(this.state.scale - 0.1);
+   let {scale} = this.state;
+   if(scale > 0){
+    this.setState({scale: scale - 0.1});
+    customModelLoader.scaleModel(scale - 0.1);
    }else{
      this.setState({scale: 0});
    }
   }
+
   updateModel = (_metadata) => {
     let model = this.state.currentModel;
     model.metadata.authorName = _metadata.authorName;
@@ -82,34 +89,45 @@ export default class VirtualReaction extends React.Component {
     this.setState({modelsLoaded: true, currentModel: model});
   }
   submitHandler(string) {
-    console.log('the text received by the submitHandler is ' + string);
     this.setGallery(string);
+  }
+  openLink(){
+   NativeModules.LinkingManager.openURL('http://abraxasrex.github.io');
   }
   render() {
     return (
-      <View>
+      <View>  
         <Pano source={asset('chess-world.jpg')}/>
-        <Text style={mainUIComponentStyles.searchText}> Search: </Text>
-        <View  style={mainUIComponentStyles.searchBar}>
-          <TextInput onSubmit={this.submitHandler.bind(this)} rows={2} 
-          cols={30} x={0} y={0} z={0} textColor={'white'} 
-          backgroundColor={'grey'} keyboardColor={null} keyboardOnHover={null}/>
-        </View>
-        <View>
+
           <ScaleUpButton onViewClicked={this.scaleModelUp}>
           </ScaleUpButton>
-          <ScaleDownButton style={{color:"#F3A31B"}} onViewClicked={this.scaleModelDown}>
+          <ScaleDownButton onViewClicked={this.scaleModelDown}>
           </ScaleDownButton>
-          <ForwardButton style={{color:"#F2981D"}}  onViewClicked={this.cycleGalleryForward}>
+          <ForwardButton  onViewClicked={this.cycleGalleryForward}>
           </ForwardButton>
-          <BackButton style={{color:"#D53718"}}  onViewClicked={this.cycleGalleryBackward}>
+          <BackButton  onViewClicked={this.cycleGalleryBackward}>
           </BackButton>
-        </View>
-        <Text
-          style={mainUIComponentStyles.mainComponent}>
-          <Text style={{color:"#1FB2C1"}}> {this.state.currentModel.metadata.modelName}</Text>
-          <Text> by {this.state.currentModel.metadata.authorName} </Text>
-        </Text>
+          
+          <Text
+            style={mainUIComponentStyles.modelInfoComponent}>
+            <Text> {this.state.currentModel.metadata.modelName}</Text>
+            <Text> by {this.state.currentModel.metadata.authorName} </Text>
+          </Text>
+
+          <Text style={mainUIComponentStyles.appTitle}> Google Poly Model Browser </Text>
+          <Text style={mainUIComponentStyles.appSubtitle}> Look to the left to search for new models. </Text>
+
+          <VrButton  onClick={this.openLink}>
+            <Text style={mainUIComponentStyles.SecretButton}> Check out the rest of my projects. </Text>
+          </VrButton>
+
+          <View style={mainUIComponentStyles.searchBar}>
+          <Text style={mainUIComponentStyles.searchText}> Search: </Text>
+            <TextInput  onSubmit={this.submitHandler.bind(this)} rows={2} 
+            cols={30} x={0.1} y={0} z={1} textColor={'white'} 
+            backgroundColor={'grey'} keyboardColor={null} keyboardOnHover={null}/>
+          </View>
+     
         <AmbientLight intensity={ 1}  />
       </View>
     );

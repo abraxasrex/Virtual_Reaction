@@ -33,7 +33,6 @@ const PolyServices = {
                     return  { obj: r.formats[0].root.url, 
                               mtl: r.formats[0].resources[0].url,
                               text: text,
-                              // text: response.assets[0].formats[0].resources[1].url,
                               metadata: {
                                 modelName: r.displayName,
                                 authorName: r.authorName

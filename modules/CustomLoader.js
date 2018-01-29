@@ -22,9 +22,7 @@ export default class CustomModelLoader extends Module {
     }
     scaleModel(newScale){
      let modifier = this.scaleModifier;
-     console.log("MODIFIER: ", modifier);
-      this.currentObject.scale.set(newScale / this.scaleModifier, newScale / this.scaleModifier,  newScale / this.scaleModifier);
-      console.log("Scale made to module, it is now: ", this.currentObject.scale);
+     this.currentObject.scale.set(newScale / this.scaleModifier, newScale / this.scaleModifier,  newScale / this.scaleModifier);
     }
     clearModel(){
         this.scene.remove(this.currentObject);
@@ -33,10 +31,12 @@ export default class CustomModelLoader extends Module {
         this.model = model;
         let path = model.mtl.split("/");
         let end = path.pop();
+        let object_loader = this.object_loader;
+        
         path = path.join("/") + "/";
         this.material_loader.setTexturePath(path);
         this.material_loader.setPath(path);
-        let object_loader = this.object_loader;
+
         this.material_loader.load(end, (materials)=> {
             materials.preload();
             this.loadObject(materials, path);
@@ -51,17 +51,11 @@ export default class CustomModelLoader extends Module {
         let zDist = bbox.max.z - bbox.min.z;
         let scaleModifier = 1;
         console.log("bbox dists: ", xDist, yDist, zDist);
-        if(xDist > 12 || yDist > 12 || zDist > 12){
-            scaleModifier = 12;
-            console.log("original scale way too large");
-        }
-        else if(xDist > 8 || yDist > 8 || zDist > 8){
-            scaleModifier = 8;
-            console.log("original scale too large");
+        if(xDist > 8 || yDist > 8 || zDist > 8){
+            scaleModifier = parseInt([xDist, yDist, zDist].sort((a,b)=> a - b).shift()) + 5;
         } 
          else if(xDist < 3 || yDist < 3 || zDist < 3){
              scaleModifier = 0.3;
-             console.log("original scale too small.");
          } else {
              scaleModifier = 1;
          }
@@ -71,7 +65,7 @@ export default class CustomModelLoader extends Module {
         this.object_loader.setMaterials(materials);
         this.object_loader.setPath(path);
         this.object_loader.load(this.model.obj.split("/").pop(), (object) => {
-            object.position.set(0, -0.5, -3.5);
+            object.position.set(0, 0, -4);
             let current = this.currentObject;
             if(!!current){
                 this.scene.remove(current);
